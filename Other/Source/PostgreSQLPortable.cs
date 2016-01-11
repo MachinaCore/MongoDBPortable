@@ -17,13 +17,13 @@ namespace FormatFactoryPortable
 		static void Main(string[] args)
 		{
             //Check if logfile exist -> Rename
-            if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFile.Replace(".exe", ".old.log")))
+            if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".old.log")))
             {
-                File.Delete(Globals.AppPath + "\\" + Globals.ExeFile.Replace(".exe", ".old.log"));
+                File.Delete(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".old.log"));
             }
-            if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFile.Replace(".exe", ".log")))
+            if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".log")))
             {
-                File.Move(Globals.AppPath + "\\" + Globals.ExeFile.Replace(".exe", ".log"), Globals.AppPath + "\\" + Globals.ExeFile.Replace(".exe", ".old.log"));
+                File.Move(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".log"), Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".old.log"));
             }
 
             //Check for Launcher ini file
