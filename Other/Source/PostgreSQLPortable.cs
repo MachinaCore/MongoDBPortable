@@ -16,18 +16,27 @@ namespace FormatFactoryPortable
 		[STAThread]
 		static void Main(string[] args)
 		{
+            //Check if logfile exist -> Rename
+            if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFile.Replace(".exe", ".old.log")))
+            {
+                File.Delete(Globals.AppPath + "\\" + Globals.ExeFile.Replace(".exe", ".old.log"));
+            }
+            if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFile.Replace(".exe", ".log")))
+            {
+                File.Move(Globals.AppPath + "\\" + Globals.ExeFile.Replace(".exe", ".log"), Globals.AppPath + "\\" + Globals.ExeFile.Replace(".exe", ".old.log"));
+            }
 
-			//Check for Launcher ini file
-			if (File.Exists(Globals.ExeFileName.Replace(".exe", ".ini"))) {
-				Globals.Launcher = Configuration.LoadFromFile(Globals.ExeFileName.Replace(".exe", ".ini"));
+            //Check for Launcher ini file
+            if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".ini"))) {
+				Globals.Launcher = Configuration.LoadFromFile(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".ini"));
 			}
-			else if (File.Exists("App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini")))
+			else if (File.Exists(Globals.AppPath + "\\App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini")))
 			{
-				Globals.Launcher = Configuration.LoadFromFile("App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini"));
+				Globals.Launcher = Configuration.LoadFromFile(Globals.AppPath + "\\App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini"));
 			}
 			else
 			{
-				MessageBox.Show("App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini") + " not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(Globals.AppPath + "\\App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini") + " not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 
@@ -88,13 +97,30 @@ namespace FormatFactoryPortable
 							using (Process process = new Process())
 							{
 								process.StartInfo.FileName = Globals.PostgreSQLEnvironment["PGSQL"] + "\\bin\\pg_ctl.exe";
-								process.StartInfo.Arguments = (" stop --pgdata " + Globals.PostgreSQLEnvironment["PGDATA"]
+								process.StartInfo.Arguments = (" stop --pgdata " +  Globals.PostgreSQLEnvironment["PGDATA"]
 																+ " -l " + Globals.PostgreSQLEnvironment["PGLOG"]
 																+ " --mode=smart -W"
 																);
 								process.Start();
-								Console.WriteLine("Starting PostgreSQL");
-							}							
+							}
+							return;
+						}
+						if (argument == "restart")
+						{
+							Console.WriteLine("Restarting PostgreSQL"); // Check for null array
+							using (Process process = new Process())
+							{
+								process.StartInfo.FileName = Globals.PostgreSQLEnvironment["PGSQL"] + "\\bin\\pg_ctl.exe";
+								process.StartInfo.Arguments = (" stop --pgdata " + Globals.PostgreSQLEnvironment["PGDATA"]
+																+ " -l " + Globals.PostgreSQLEnvironment["PGLOG"]
+																+ " --mode=smart -W"
+																);
+                                process.StartInfo.CreateNoWindow = false;
+                                process.StartInfo.UseShellExecute = false;
+                                process.Start();
+								process.WaitForExit();
+                                Thread.Sleep(3000);
+                            }
 						}
 					}
 				}
@@ -110,9 +136,9 @@ namespace FormatFactoryPortable
 
 			try
 			{
-				Globals.streamWriter = new StreamWriter(Globals.ExeFile.Replace(".exe", "") + ".log", true);
+				Globals.streamWriter = new StreamWriter(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", "") + ".log", true);
 			}
-			catch (System.IO.IOException e)
+			catch
 			{
 				Console.WriteLine("Cant access log file -> Ignoring");
 			}
@@ -236,10 +262,10 @@ namespace FormatFactoryPortable
 					Console.ForegroundColor = color;
 					Console.WriteLine("Received: {0}", data);
 					Console.ForegroundColor = oldColor;
-				}
-				catch(System.IO.IOException e)
-				{
-					Console.WriteLine("Cant access log file -> Ignoring");
+                }
+                catch
+                {
+                    Console.WriteLine("Cant access log file -> Ignoring");
 				}
 
 			}
@@ -251,15 +277,14 @@ namespace FormatFactoryPortable
 
 	public class Globals
 	{
-		public static Configuration AppInfo = Configuration.LoadFromFile("App\\AppInfo\\AppInfo.ini");
-		public static Configuration Launcher = null;
-
 		public static Dictionary<string, string> PostgreSQLEnvironment = new Dictionary<string, string>();
 		public static string ExeFile = Assembly.GetExecutingAssembly().Location;
 		public static string ExeFileName = Path.GetFileName(ExeFile);
 		public static string AppPath = Path.GetDirectoryName(Globals.ExeFile);
 		public static string BasePath = Directory.GetParent(Path.GetDirectoryName(Globals.ExeFile)).FullName;
 		public static string DataPath = Globals.AppPath + "\\Data";
+		public static Configuration AppInfo = Configuration.LoadFromFile(AppPath + "\\App\\AppInfo\\AppInfo.ini");
+		public static Configuration Launcher = null;		
 		public static StreamWriter streamWriter = null;
 	}
 }
