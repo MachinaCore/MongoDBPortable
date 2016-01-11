@@ -17,65 +17,65 @@ namespace FormatFactoryPortable
 		static void Main(string[] args)
 		{
 
-            //Check for Launcher ini file
-            if (File.Exists(Globals.ExeFileName.Replace(".exe", ".ini"))) {
-                Globals.Launcher = Configuration.LoadFromFile(Globals.ExeFileName.Replace(".exe", ".ini"));
-            }
-            else if (File.Exists("App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini")))
-            {
-                Globals.Launcher = Configuration.LoadFromFile("App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini"));
-            }
-            else
-            {
-                MessageBox.Show("App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini") + " not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+			//Check for Launcher ini file
+			if (File.Exists(Globals.ExeFileName.Replace(".exe", ".ini"))) {
+				Globals.Launcher = Configuration.LoadFromFile(Globals.ExeFileName.Replace(".exe", ".ini"));
+			}
+			else if (File.Exists("App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini")))
+			{
+				Globals.Launcher = Configuration.LoadFromFile("App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini"));
+			}
+			else
+			{
+				MessageBox.Show("App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini") + " not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
 
 
-            string pathvar = Environment.GetEnvironmentVariable("PATH");
+			string pathvar = Environment.GetEnvironmentVariable("PATH");
 
-            foreach (var section in Globals.Launcher["Environment"])
-            {
-                string sectionComment = null;
-                if (section.Comment != null)
-                {
-                    sectionComment = section.Comment.ToString();
-                }
-                string sectionString = section.StringValue + sectionComment;
-				
-                sectionString = sectionString.Replace("%PATH%", pathvar);
-                sectionString = sectionString.Replace("%PAL:AppDir%", Globals.AppPath + "\\App");
-                sectionString = sectionString.Replace("%PAL:DataDir%", Globals.DataPath);
+			foreach (var section in Globals.Launcher["Environment"])
+			{
+				string sectionComment = null;
+				if (section.Comment != null)
+				{
+					sectionComment = section.Comment.ToString();
+				}
+				string sectionString = section.StringValue + sectionComment;
 
-                if (section.Name == "PGSQL")
-                    Globals.PostgreSQLEnvironment["PGSQL"] = sectionString;
+				sectionString = sectionString.Replace("%PATH%", pathvar);
+				sectionString = sectionString.Replace("%PAL:AppDir%", Globals.AppPath + "\\App");
+				sectionString = sectionString.Replace("%PAL:DataDir%", Globals.DataPath);
 
-                if (section.Name == "PGDATA")
-                    Globals.PostgreSQLEnvironment["PGDATA"] = sectionString;
+				if (section.Name == "PGSQL")
+					Globals.PostgreSQLEnvironment["PGSQL"] = sectionString;
 
-                if (section.Name == "PGLOG")
-                    Globals.PostgreSQLEnvironment["PGLOG"] = sectionString;
+				if (section.Name == "PGDATA")
+					Globals.PostgreSQLEnvironment["PGDATA"] = sectionString;
 
-                if (section.Name == "PGLOCALEDIR")
-                    Globals.PostgreSQLEnvironment["PGLOCALEDIR"] = sectionString;
+				if (section.Name == "PGLOG")
+					Globals.PostgreSQLEnvironment["PGLOG"] = sectionString;
 
-                if (section.Name == "PGDATABASE")
-                    Globals.PostgreSQLEnvironment["PGDATABASE"] = sectionString;
+				if (section.Name == "PGLOCALEDIR")
+					Globals.PostgreSQLEnvironment["PGLOCALEDIR"] = sectionString;
 
-                if (section.Name == "PGPORT")
-                    Globals.PostgreSQLEnvironment["PGPORT"] = sectionString;
+				if (section.Name == "PGDATABASE")
+					Globals.PostgreSQLEnvironment["PGDATABASE"] = sectionString;
 
-                if (section.Name == "PGUSER")
-                    Globals.PostgreSQLEnvironment["PGUSER"] = sectionString;
+				if (section.Name == "PGPORT")
+					Globals.PostgreSQLEnvironment["PGPORT"] = sectionString;
+
+				if (section.Name == "PGUSER")
+					Globals.PostgreSQLEnvironment["PGUSER"] = sectionString;
 
 
-                Environment.SetEnvironmentVariable(section.Name, sectionString);
-                //Console.WriteLine(section.Name);
-                //Console.WriteLine(section.StringValue.Replace("%PAL:AppDir%", Globals.AppPath));
-                //Console.WriteLine(sectionString);
-            }
+				Environment.SetEnvironmentVariable(section.Name, sectionString);
+				//Console.WriteLine(section.Name);
+				//Console.WriteLine(section.StringValue.Replace("%PAL:AppDir%", Globals.AppPath));
+				//Console.WriteLine(sectionString);
+			}
 
-            if (args != null)
+			if (args != null)
 			{
 				if (args.Length != 0)
 				{
@@ -89,8 +89,8 @@ namespace FormatFactoryPortable
 							{
 								process.StartInfo.FileName = Globals.PostgreSQLEnvironment["PGSQL"] + "\\bin\\pg_ctl.exe";
 								process.StartInfo.Arguments = (" stop --pgdata " + Globals.PostgreSQLEnvironment["PGDATA"]
-                                                                + " -l " + Globals.PostgreSQLEnvironment["PGLOG"]
-                                                                + " --mode=smart -W"
+																+ " -l " + Globals.PostgreSQLEnvironment["PGLOG"]
+																+ " --mode=smart -W"
 																);
 								process.Start();
 								Console.WriteLine("Starting PostgreSQL");
@@ -107,7 +107,16 @@ namespace FormatFactoryPortable
 				Console.WriteLine("Use " + Globals.ExeFileName + " stop to stop PostgreSQL"); // Check for null array
 				return;
 			}
-			
+
+			try
+			{
+				Globals.streamWriter = new StreamWriter(Globals.ExeFile.Replace(".exe", "") + ".log", true);
+			}
+			catch (System.IO.IOException e)
+			{
+				Console.WriteLine("Cant access log file -> Ignoring");
+			}
+
 			bool newInstance = true;
 			bool newInstallation = false;
 
@@ -121,7 +130,7 @@ namespace FormatFactoryPortable
 					{
 						process.StartInfo.FileName = Globals.PostgreSQLEnvironment["PGSQL"] + "\\bin\\initdb.exe";
 						process.StartInfo.Arguments = (" -U " + Globals.PostgreSQLEnvironment["PGUSER"]
-                                                        + " -A trust"
+														+ " -A trust"
 														+ " -E utf8"
 														+ " --locale=C"
 														);
@@ -147,8 +156,8 @@ namespace FormatFactoryPortable
 				{
 					process.StartInfo.FileName = Globals.PostgreSQLEnvironment["PGSQL"] + "\\bin\\pg_ctl.exe";
 					process.StartInfo.Arguments = (" -D " + Globals.PostgreSQLEnvironment["PGDATA"]
-                                                    + " -l " + Globals.PostgreSQLEnvironment["PGLOG"]
-                                                    + " -w start"
+													+ " -l " + Globals.PostgreSQLEnvironment["PGLOG"]
+													+ " -w start"
 													);
 					process.StartInfo.RedirectStandardError = true;
 					//process.StartInfo.RedirectStandardInput = true;
@@ -183,7 +192,7 @@ namespace FormatFactoryPortable
 			{
 				process.StartInfo.FileName = Globals.PostgreSQLEnvironment["PGSQL"] + "\\bin\\psql.exe";
 				process.StartInfo.Arguments = (" --username=" + Globals.PostgreSQLEnvironment["PGUSER"]
-                                               + " -c \"CREATE USER odoo WITH PASSWORD \'odoo\' SUPERUSER;\""
+											   + " -c \"CREATE USER odoo WITH PASSWORD \'odoo\' SUPERUSER;\""
 											   );
 				process.StartInfo.RedirectStandardError = true;
 				//process.StartInfo.RedirectStandardInput = true;
@@ -219,12 +228,20 @@ namespace FormatFactoryPortable
 		{
 			if (data != null)
 			{
-				Globals.streamWriter.WriteLine("[{0}][{1}] {2} ", String.Format("{0:yyyyMMdd HH:mm:ss}", DateTime.Now), "Info", data);
-				Globals.streamWriter.Flush();
-				ConsoleColor oldColor = Console.ForegroundColor;
-				Console.ForegroundColor = color;
-				Console.WriteLine("Received: {0}", data);
-				Console.ForegroundColor = oldColor;
+				try
+				{
+					Globals.streamWriter.WriteLine("[{0}][{1}] {2} ", String.Format("{0:yyyyMMdd HH:mm:ss}", DateTime.Now), "Info", data);
+					Globals.streamWriter.Flush();
+					ConsoleColor oldColor = Console.ForegroundColor;
+					Console.ForegroundColor = color;
+					Console.WriteLine("Received: {0}", data);
+					Console.ForegroundColor = oldColor;
+				}
+				catch(System.IO.IOException e)
+				{
+					Console.WriteLine("Cant access log file -> Ignoring");
+				}
+
 			}
 		}
 
@@ -235,14 +252,14 @@ namespace FormatFactoryPortable
 	public class Globals
 	{
 		public static Configuration AppInfo = Configuration.LoadFromFile("App\\AppInfo\\AppInfo.ini");
-        public static Configuration Launcher = null;
+		public static Configuration Launcher = null;
 
-        public static Dictionary<string, string> PostgreSQLEnvironment = new Dictionary<string, string>();
-        public static string ExeFile = Assembly.GetExecutingAssembly().Location;
-	    public static string ExeFileName = Path.GetFileName(ExeFile);
+		public static Dictionary<string, string> PostgreSQLEnvironment = new Dictionary<string, string>();
+		public static string ExeFile = Assembly.GetExecutingAssembly().Location;
+		public static string ExeFileName = Path.GetFileName(ExeFile);
 		public static string AppPath = Path.GetDirectoryName(Globals.ExeFile);
 		public static string BasePath = Directory.GetParent(Path.GetDirectoryName(Globals.ExeFile)).FullName;
 		public static string DataPath = Globals.AppPath + "\\Data";
-		public static StreamWriter streamWriter = new StreamWriter(ExeFile.Replace(".exe", "") + ".log", true);
+		public static StreamWriter streamWriter = null;
 	}
 }
