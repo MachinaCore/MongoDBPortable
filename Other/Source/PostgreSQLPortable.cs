@@ -36,7 +36,13 @@ namespace FormatFactoryPortable
 
             foreach (var section in Globals.Launcher["Environment"])
             {
-                string sectionString = section.StringValue;
+                string sectionComment = null;
+                if (section.Comment != null)
+                {
+                    sectionComment = section.Comment.ToString();
+                }
+                string sectionString = section.StringValue + sectionComment;
+				
                 sectionString = sectionString.Replace("%PATH%", pathvar);
                 sectionString = sectionString.Replace("%PAL:AppDir%", Globals.AppPath + "\\App");
                 sectionString = sectionString.Replace("%PAL:DataDir%", Globals.DataPath);
