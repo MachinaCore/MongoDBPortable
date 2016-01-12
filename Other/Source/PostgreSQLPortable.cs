@@ -16,16 +16,6 @@ namespace FormatFactoryPortable
 		[STAThread]
 		static void Main(string[] args)
 		{
-            //Check if logfile exist -> Rename
-            if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".old.log")))
-            {
-                File.Delete(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".old.log"));
-            }
-            if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".log")))
-            {
-                File.Move(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".log"), Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".old.log"));
-            }
-
             //Check for Launcher ini file
             if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".ini"))) {
 				Globals.Launcher = Configuration.LoadFromFile(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".ini"));
@@ -125,6 +115,16 @@ namespace FormatFactoryPortable
 					}
 				}
 			}		
+			
+            //Check if logfile exist -> Rename
+            if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".old.log")))
+            {
+                File.Delete(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".old.log"));
+            }
+            if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".log")))
+            {
+                File.Move(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".log"), Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".old.log"));
+            }			
 			
 			//Check if running
 			if (Process.GetProcessesByName("postgres").Length > 0)
