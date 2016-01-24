@@ -11,7 +11,7 @@ using CommandLine.Text;
 using SharpConfig;
 
 
-namespace PostgreSQLPortable
+namespace Launcher
 {
     static class Program
     {
@@ -19,19 +19,7 @@ namespace PostgreSQLPortable
         static void Main(string[] args)
         {
             //Check for Launcher ini file
-            if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".ini")))
-            {
-                Globals.Launcher = Configuration.LoadFromFile(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".ini"));
-            }
-            else if (File.Exists(Globals.AppPath + "\\App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini")))
-            {
-                Globals.Launcher = Configuration.LoadFromFile(Globals.AppPath + "\\App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini"));
-            }
-            else
-            {
-                MessageBox.Show(Globals.AppPath + "\\App\\AppInfo\\Launcher\\" + Globals.ExeFileName.Replace(".exe", ".ini") + " not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            Launcher.ReadLauncherIni();
 
 
             string pathvar = Environment.GetEnvironmentVariable("PATH");
@@ -119,6 +107,13 @@ namespace PostgreSQLPortable
                 }
             }
 
+
+            //Check if running or definied Handler
+            if (Classes.AlreadyRunning.Handler())
+            {
+                return;
+            }
+
             //Check if logfile exist -> Rename
             if (File.Exists(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".old.log")))
             {
@@ -129,13 +124,6 @@ namespace PostgreSQLPortable
                 File.Move(Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".log"), Globals.AppPath + "\\" + Globals.ExeFileName.Replace(".exe", ".old.log"));
             }
 
-            //Check if running
-            if (Process.GetProcessesByName("postgres").Length > 0)
-            {
-                Console.WriteLine("PostgreSQL already running"); // Check for null array
-                Console.WriteLine("Use " + Globals.ExeFileName + " stop to stop PostgreSQL"); // Check for null array
-                return;
-            }
 
             try
             {
