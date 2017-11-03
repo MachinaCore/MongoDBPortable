@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgreSQLPortable", "PostgreSQLPortable.csproj", "{3DA532CD-8357-4CFD-BB5E-241EC28371DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GathSystemsPortableApp", "..\..\..\..\Libraries\GathSystemsPortableApp\GathSystemsPortableApp.csproj", "{FAB76E73-2D7E-4243-A930-841286554927}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{3DA532CD-8357-4CFD-BB5E-241EC28371DD}.Release|x64.Build.0 = Release|x64
 		{3DA532CD-8357-4CFD-BB5E-241EC28371DD}.Release|x86.ActiveCfg = Release|x86
 		{3DA532CD-8357-4CFD-BB5E-241EC28371DD}.Release|x86.Build.0 = Release|x86
+		{FAB76E73-2D7E-4243-A930-841286554927}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAB76E73-2D7E-4243-A930-841286554927}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAB76E73-2D7E-4243-A930-841286554927}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FAB76E73-2D7E-4243-A930-841286554927}.Debug|x64.Build.0 = Debug|Any CPU
+		{FAB76E73-2D7E-4243-A930-841286554927}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FAB76E73-2D7E-4243-A930-841286554927}.Debug|x86.Build.0 = Debug|Any CPU
+		{FAB76E73-2D7E-4243-A930-841286554927}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAB76E73-2D7E-4243-A930-841286554927}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAB76E73-2D7E-4243-A930-841286554927}.Release|x64.ActiveCfg = Release|Any CPU
+		{FAB76E73-2D7E-4243-A930-841286554927}.Release|x64.Build.0 = Release|Any CPU
+		{FAB76E73-2D7E-4243-A930-841286554927}.Release|x86.ActiveCfg = Release|Any CPU
+		{FAB76E73-2D7E-4243-A930-841286554927}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
