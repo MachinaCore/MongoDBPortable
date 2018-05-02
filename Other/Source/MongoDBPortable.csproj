@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Launcher</RootNamespace>
-    <AssemblyName>PostgreSQLPortable</AssemblyName>
+    <AssemblyName>MongoDBPortable</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -164,9 +164,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Libraries\GathSystemsPortableApp\GathSystemsPortableApp.csproj">
-      <Project>{fab76e73-2d7e-4243-a930-841286554927}</Project>
-      <Name>GathSystemsPortableApp</Name>
+    <ProjectReference Include="..\..\..\..\Libraries\MachinaCorePortableApp\MachinaCorePortableApp.csproj">
+      <Project>{41d9f365-cf2c-4fa3-96c0-24421ad73cb0}</Project>
+      <Name>MachinaCorePortableApp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

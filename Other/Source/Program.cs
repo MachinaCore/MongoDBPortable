@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using CommandLine;
 using CommandLine.Text;
 using SharpConfig;
-using GathSystemsPortableApp;
+using MachinaCorePortableApp;
 
 namespace Launcher
 {
@@ -21,39 +21,26 @@ namespace Launcher
             //Check for Launcher ini file
             PortableApp.Init();
 
-            //Set Stop Arguments
-            Globals.StopFileName = Globals.EnvironmentVariable["PGSQL"] + "\\bin\\pg_ctl.exe";
-            Globals.StopArguments = " stop --pgdata " + Globals.EnvironmentVariable["PGDATA"]
-                                  + " -l " + Globals.EnvironmentVariable["PGLOG"]
-                                  + " --mode=smart -W";
-
-
-            //Create Database if not exists
-            if (!Directory.Exists(Globals.EnvironmentVariable["PGDATA"]))
+            bool folderExists = Directory.Exists(Globals.EnvironmentVariable["MONGODB_DB"]);
+            if (!folderExists)
             {
-                Globals.StartFileName = Globals.EnvironmentVariable["PGSQL"] + "\\bin\\initdb.exe";
-                Globals.StartArguments = " -U " + Globals.EnvironmentVariable["PGUSER"]
-                                         + " -A trust"
-                                         + " -E utf8"
-                                         + " --locale=C";
-                Console.WriteLine("Database creation ready");
-                PortableApp.Run(args);
+                Directory.CreateDirectory(Globals.EnvironmentVariable["MONGODB_DB"]);
             }
 
-            //Start Database
-            Globals.StartFileName = Globals.EnvironmentVariable["PGSQL"] + "\\bin\\pg_ctl.exe";
-            Globals.StartArguments = " -D " + Globals.EnvironmentVariable["PGDATA"]
-                                    + " -l " + Globals.EnvironmentVariable["PGLOG"]
-                                    + " -w start";
+            //Set Stop Arguments
+            Globals.StopFileName = Globals.EnvironmentVariable["MONGODB_BIN"] + "\\bin\\mongo.exe";
+            Globals.StopArguments = " admin --eval \"db.shutdownServer()\"";
 
-            Console.WriteLine("Starting PostgreSQL");
+            //Start Database
+            Globals.StartFileName = Globals.EnvironmentVariable["MONGODB_BIN"] + "\\bin\\mongod.exe";
+            Globals.StartArguments = " --dbpath " + Globals.EnvironmentVariable["MONGODB_DB"]
+                                    + " --port " + Globals.EnvironmentVariable["MONGODB_PORT"]
+                                    //+ " -w start";
+                                    + "";
+
+            Console.WriteLine("Starting MongoDB");
 
             PortableApp.Run(args);
-
-
-
-
-
         }
 
 
