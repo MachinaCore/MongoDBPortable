@@ -1,6 +1,6 @@
 @echo off
 
-SET APPNAME=PostgreSQLPortable
+SET APPNAME=MongoDBPortable
 SET NSISLAUNCHER=0
 SET SEVENZIP=0
 SET PORTABLEAPPSINSTALLER=1
@@ -39,7 +39,7 @@ mkdir Release
 robocopy App Release\App /s /e
 robocopy Other\Help Release\Other\Help /s /e
 
-copy PostgreSQLPortable.exe Release\PostgreSQLPortable.exe
+copy MongoDBPortable.exe Release\MongoDBPortable.exe
 copy help.html Release\help.html
 
 REM ---------------------------------------------------------------------

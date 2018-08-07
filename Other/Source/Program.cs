@@ -34,9 +34,7 @@ namespace Launcher
             //Start Database
             Globals.StartFileName = Globals.EnvironmentVariable["MONGODB_BIN"] + "\\bin\\mongod.exe";
             Globals.StartArguments = " --dbpath " + Globals.EnvironmentVariable["MONGODB_DB"]
-                                    + " --port " + Globals.EnvironmentVariable["MONGODB_PORT"]
-                                    //+ " -w start";
-                                    + "";
+                                    + " --port " + Globals.EnvironmentVariable["MONGODB_PORT"];
 
             Console.WriteLine("Starting MongoDB");
 
